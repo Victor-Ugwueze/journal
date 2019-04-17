@@ -1,0 +1,27 @@
+type User {
+  firstName:  String!
+  lastName:  String!
+  email:  String!
+  imageUrl:  String
+}
+
+type Query {
+    me: String!
+}
+
+type AuthData {
+  id: ID!
+  token: String!
+}
+
+input NewUserInput {
+  firstName:  String!
+  lastName:  String!
+  email:  String!
+  password:  String!
+}
+
+type Mutation {
+  create(input: NewUserInput!): User!
+  login(email: String!, password: String!): AuthData!
+}
