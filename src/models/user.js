@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     imageUrl: DataTypes.STRING,
   }, {});
-  User.associate = function (models) {
-    // associations can be defined here
+  User.associate = (models) => {
+    User.hasMany(models.Entry);
   };
   return User;
 };

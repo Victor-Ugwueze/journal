@@ -1,19 +1,26 @@
+import { combineResolvers } from 'graphql-resolvers';
 import { User } from '../../models';
 import AuthHelper from '../../helper/Auth';
+import AuthMiddleWare from '../../middlewares';
 
 const create = async (_, {
   input: {
     email, password, firstName, lastName,
   },
 }) => {
-  const user = await User.create({
-    email,
-    password: AuthHelper.hashPassword(password),
-    firstName,
-    lastName,
-  });
-  if (!user) {
-    throw new Error('Problem Creating Your Account');
+  let user;
+  try {
+    user = await User.create({
+      email,
+      password: AuthHelper.hashPassword(password),
+      firstName,
+      lastName,
+    });
+    if (!user) {
+      throw new Error('Problem Creating Your Account');
+    }
+  } catch (error) {
+    throw new Error(error.toString());
   }
   const {
     id,
@@ -21,13 +28,14 @@ const create = async (_, {
   } = user;
 
   const token = AuthHelper.generateToken(id, email);
-
   return {
-    id,
-    email,
-    imageUrl,
-    firstName,
-    lastName,
+    user: {
+      id,
+      email,
+      imageUrl,
+      firstName,
+      lastName,
+    },
     token,
   };
 };
@@ -47,10 +55,12 @@ const login = async (_, { email, password }) => {
     } = user;
     const token = AuthHelper.generateToken(id, email);
     return {
-      id,
-      imageUrl,
-      firstName,
-      lastName,
+      user: {
+        id,
+        imageUrl,
+        firstName,
+        lastName,
+      },
       token,
     };
   }
@@ -62,7 +72,11 @@ export default {
     me: () => 'Hello',
   },
   Mutation: {
-    create,
+    create: combineResolvers(
+      AuthMiddleWare.userExist,
+      AuthMiddleWare.validateSignUp,
+      create,
+    ),
     login,
   },
 };

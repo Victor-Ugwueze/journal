@@ -1,0 +1,22 @@
+input NewEntryInput {
+  title: String!
+  body: String!
+}
+
+type ERROR {
+  field: String!
+  message: String!
+}
+type Entry {
+  id: ID
+  title: String
+  body: String
+}
+type EntryData {
+  entry: Entry
+  errors: [ERROR!]
+}
+
+extend type Mutation {
+  createEntry(input: NewEntryInput!): EntryData
+}

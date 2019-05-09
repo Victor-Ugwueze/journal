@@ -3,6 +3,9 @@ import { ApolloServer } from 'apollo-server-express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { schemaObject, resolvers } from './types';
+import models from './models';
+import AuthMiddleware from './middlewares';
+
 
 const app = express();
 
@@ -14,17 +17,15 @@ app.use('/graphql', bodyParser.json());
   const server = new ApolloServer({
     resolvers,
     typeDefs: schemaTypes,
+    context: async ({ req }) => {
+      const { user, error } = await AuthMiddleware.verifyToken(req);
+      return {
+        models,
+        user,
+        error,
+      };
+    },
   });
   server.applyMiddleware({ app, path: '/graphql' });
-
-  app.post('/api/v1/auth/signup', (req, res) => {
-    res.status(201).json({
-      status: 201,
-      data: {
-        username: 'Andela Man',
-        token: 'dvwdvshsavchjasd.cewfewio wskNAXJWEBAFSCAEW.Caewsvcwbevsfbcawjesbfjcbwejsdbzc'
-      },
-    });
-  });
   app.listen({ port: 4000 }, () => console.log('Server running on http://localhost:4000/graphql'));
 })();

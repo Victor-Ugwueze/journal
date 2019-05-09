@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/Victor-Ugwueze/journal#readme",
   "dependencies": {
+    "@hapi/joi": "^15.0.1",
+    "apollo-cache-inmemory": "^1.5.1",
     "apollo-server": "^2.4.8",
     "apollo-server-express": "^2.4.8",
     "bcrypt": "^3.0.5",
@@ -31,6 +33,7 @@
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "graphql": "^14.2.1",
+    "graphql-resolvers": "^0.3.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "nodemon": "1.18.8",
