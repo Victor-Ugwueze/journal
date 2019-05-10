@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     imageUrl: DataTypes.STRING,
   }, {});
   User.associate = (models) => {
-    User.hasMany(models.Entry);
+    User.hasMany(models.Entry, {
+      foreignKey: 'userId',
+      as: 'entries',
+    });
   };
   return User;
 };

@@ -20,3 +20,7 @@ type EntryData {
 extend type Mutation {
   createEntry(input: NewEntryInput!): EntryData
 }
+
+extend type Query {
+  listAllEntry: [Entry!]
+}
