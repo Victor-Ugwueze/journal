@@ -59,11 +59,13 @@ class AuthMiddleware {
     return skip;
   }
 
-  static async validateCreateEntry(_, { input }) {
+  static async validateEntry(_, { input }) {
     try {
       await Joi.validate(
         input,
-        validationSchema.validateCreateEntry(),
+        input.mode === 'edit'
+          ? validationSchema.validateUpdateEntry()
+          : validationSchema.validateCreateEntry(),
         { abortEarly: false },
       );
     } catch (errors) {
@@ -71,6 +73,8 @@ class AuthMiddleware {
         field: error.context.key,
         message: error.message,
       }));
+      console.log(formatErrors);
+
       return {
         entry: null,
         errors: formatErrors,

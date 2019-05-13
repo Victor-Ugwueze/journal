@@ -24,6 +24,14 @@ const schema = {
       .required(),
     body: Joi.string().min(3).required(),
   }),
+
+
+  validateUpdateEntry: () => Joi.object().keys({
+    title: Joi.string().min(3).max(60),
+    body: Joi.string().min(3),
+    mode: Joi.string().valid('edit').required(),
+    id: Joi.string().required(),
+  }),
 };
 
 export default schema;

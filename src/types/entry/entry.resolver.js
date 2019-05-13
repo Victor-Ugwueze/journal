@@ -26,7 +26,7 @@ const createEntry = async (_, { input }, { models, user, error }) => {
   };
 };
 
-const listAllEntry = async (_, args, { models, user: { userId } }) => {
+const listAllEntries = async (_, args, { models, user: { userId } }) => {
   try {
     const entries = await models.Entry.findAll({
       where: {
@@ -39,18 +39,51 @@ const listAllEntry = async (_, args, { models, user: { userId } }) => {
   }
 };
 
+
+const updateEntry = async (_, { input }, { models, user }) => {
+  try {
+    const foundEntry = await models.Entry.findOne({ where: { id: input.id, userId: user.userId } });
+    if (!foundEntry) {
+      return new Error('Entry not found');
+    }
+
+    const { title, body } = foundEntry;
+    const entry = await models.Entry.update({ title, body, ...input }, {
+      where: {
+        id: input.id,
+      },
+      returning: {
+        plain: true,
+      },
+    });
+    return {
+      errors: [],
+      entry: {
+        ...entry[1][0].dataValues,
+      },
+    };
+  } catch (error) {
+    throw new Error('An Error ocurred while updating entry');
+  }
+};
+
 export default {
   Query: {
-    listAllEntry: combineResolvers(
+    listAllEntries: combineResolvers(
       AuthMiddleWare.isAuthenticated,
-      listAllEntry,
+      listAllEntries,
     ),
   },
   Mutation: {
     createEntry: combineResolvers(
       AuthMiddleWare.isAuthenticated,
-      AuthMiddleWare.validateCreateEntry,
+      AuthMiddleWare.validateEntry,
       createEntry,
+    ),
+    updateEntry: combineResolvers(
+      AuthMiddleWare.isAuthenticated,
+      AuthMiddleWare.validateEntry,
+      updateEntry,
     ),
   },
 };
