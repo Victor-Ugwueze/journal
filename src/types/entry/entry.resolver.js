@@ -67,6 +67,26 @@ const updateEntry = async (_, { input }, { models, user }) => {
   }
 };
 
+const deleteEntry = async (_, { id }, { models, user }) => {
+  try {
+    const foundEntry = await models.Entry.findOne({ where: { id, userId: user.userId } });
+    if (!foundEntry) {
+      return new Error('Entry not found');
+    }
+    await models.Entry.destroy({
+      where: {
+        id,
+      },
+    });
+    return {
+      errors: [],
+      message: 'Entry deleted successfully',
+    };
+  } catch (error) {
+    throw new Error('An Error ocurred while deleting entry');
+  }
+};
+
 export default {
   Query: {
     listAllEntries: combineResolvers(
@@ -84,6 +104,10 @@ export default {
       AuthMiddleWare.isAuthenticated,
       AuthMiddleWare.validateEntry,
       updateEntry,
+    ),
+    deleteEntry: combineResolvers(
+      AuthMiddleWare.isAuthenticated,
+      deleteEntry,
     ),
   },
 };

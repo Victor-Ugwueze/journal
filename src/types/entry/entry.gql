@@ -26,9 +26,15 @@ type EntryData {
   errors: [ERROR!]
 }
 
+type SuccessResponse {
+  errors: [ERROR!],
+  message: String!
+}
+
 extend type Mutation {
   createEntry(input: NewEntryInput!): EntryData
   updateEntry(input: UpdateEntryInput!): EntryData
+  deleteEntry(id: Int!): SuccessResponse
 }
 
 extend type Query {
