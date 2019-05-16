@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "NODE_ENV=development  DEBUG=log  nodemon --exec babel-node src/index.js",
+    "start": "node --require @babel/register src/index.js",
     "migrate": "sequelize db:migrate"
   },
   "repository": {
@@ -23,6 +24,10 @@
   },
   "homepage": "https://github.com/Victor-Ugwueze/journal#readme",
   "dependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
     "@hapi/joi": "^15.0.1",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-server": "^2.4.8",
@@ -43,10 +48,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
-    "@babel/core": "^7.4.3",
     "@babel/node": "^7.0.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/preset-env": "^7.4.3",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",

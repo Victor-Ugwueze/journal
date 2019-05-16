@@ -83,7 +83,16 @@ const deleteEntry = async (_, { id }, { models, user }) => {
       message: 'Entry deleted successfully',
     };
   } catch (error) {
-    throw new Error('An Error ocurred while deleting entry');
+    throw new Error('An Error ocurred deleting entry');
+  }
+};
+
+const genEntryById = async (_, { id }, { models, user }) => {
+  try {
+    const entry = await models.Entry.findOne({ where: { id, userId: user.userId } });
+    return entry;
+  } catch (error) {
+    throw new Error('An Error ocurred fetching entry');
   }
 };
 
@@ -108,6 +117,10 @@ export default {
     deleteEntry: combineResolvers(
       AuthMiddleWare.isAuthenticated,
       deleteEntry,
+    ),
+    genEntryById: combineResolvers(
+      AuthMiddleWare.isAuthenticated,
+      genEntryById,
     ),
   },
 };

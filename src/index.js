@@ -11,6 +11,7 @@ const app = express();
 
 app.use(cors());
 app.use('/graphql', bodyParser.json());
+app.get('/', (req, res) => res.status(200).json({ message: 'Welcome ' }));
 
 (async () => {
   const schemaTypes = await schemaObject();
@@ -27,5 +28,5 @@ app.use('/graphql', bodyParser.json());
     },
   });
   server.applyMiddleware({ app, path: '/graphql' });
-  app.listen({ port: 4000 }, () => console.log('Server running on http://localhost:4000/graphql'));
+  app.listen({ port: process.env.PORT || 4000 }, () => console.log('Server running on http://localhost:4000/graphql'));
 })();
