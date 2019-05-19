@@ -4,7 +4,7 @@
 version: 2
 defaults: &defaults
   docker:  
-    - image: gcr.io/journal-apigit -backend/journal-backend-base-node-image:0.1
+    - image: node:10.13.0-alpine
       auth:
         username: _json_key
         password: $GCLOUD_SERVICE_KEY
@@ -59,6 +59,11 @@ jobs:
             ./cc-test-reporter before-build
             yarn test --coverage
             ./cc-test-reporter after-build --exit-code $?
+  build_application_artifacts:
+    <<: *defaults
+    steps:
+      - *install_npm_packages
+      - run: yarn run build
 
 workflows:
   version: 2
