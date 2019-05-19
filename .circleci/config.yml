@@ -76,6 +76,5 @@ workflows:
             - checkout_code
       - build_application_artifacts:
           requires:
-            - run_vulnerability_check
             - test_and_report
             - checkout_code
