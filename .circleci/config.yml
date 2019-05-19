@@ -4,18 +4,18 @@
 version: 2
 defaults: &defaults
   docker:  
-    - image: node:10.13.0-alpine
+    - image: gcr.io/my-comp-eng/journal-api:v1
       auth:
         username: _json_key
         password: $GCLOUD_SERVICE_KEY
       environment:
         NODE_ENV: test
-        DATABASE_URL: postgres://root@localhost/travela_dev_test
+        DATABASE_URL: postgres://root@localhost/journal_dev_test
     - image: postgres:9.6-alpine
       environment:
         POSTGRES_USER: root
-        POSTGRES_DB: travela_dev_test
-  working_directory: ~/travela-backend
+        POSTGRES_DB: journal_dev_test
+  working_directory: ~/journal-backend
 
 install_npm_packages: &install_npm_packages
   run:
@@ -45,16 +45,11 @@ jobs:
           name: Wait for postgres to be ready
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
-          name: Checkout to develop and run migrations
+          name: Checkout to staging and run migrations
           command: |
-            git checkout staging
             yarn db:migrate
-            git checkout $CIRCLE_BRANCH
       - run:
-          name: Run travela backend lint test
-          command: yarn lint
-      - run:
-          name: Run travela test suites
+          name: Run journal test suites
           command: |
             ./cc-test-reporter before-build
             yarn test --coverage

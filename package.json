@@ -10,7 +10,7 @@
     "build-server": "babel src --out-dir dist -s",
     "clean": "rm -rf dist && mkdir dist",
     "start": "./node_modules/.bin/sequelize db:migrate && node dist/index.js",
-    "migrate": "sequelize db:migrate"
+    "db:migrate": "sequelize db:migrate"
   },
   "repository": {
     "type": "git",
