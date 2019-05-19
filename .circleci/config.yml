@@ -1,0 +1,79 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+version: 2
+defaults: &defaults
+  docker:  
+    - image: gcr.io/journal-backend/journal-backend-base-node-image:0.1
+      auth:
+        username: _json_key
+        password: $GCLOUD_SERVICE_KEY
+      environment:
+        NODE_ENV: test
+        DATABASE_URL: postgres://root@localhost/travela_dev_test
+    - image: postgres:9.6-alpine
+      environment:
+        POSTGRES_USER: root
+        POSTGRES_DB: travela_dev_test
+  working_directory: ~/travela-backend
+
+install_npm_packages: &install_npm_packages
+  run:
+    name: Install Npm Dependencies
+    command: yarn install
+
+jobs:
+  checkout_code:
+    <<: *defaults
+    steps: # a collection of executable commands
+      - checkout # special step to check out source code to working directory
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - *install_npm_packages
+  test_and_report:
+    <<: *defaults
+    steps:
+      - *install_npm_packages
+      - run:
+          name: Install code climate test reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Wait for postgres to be ready
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Checkout to develop and run migrations
+          command: |
+            git checkout staging
+            yarn db:migrate
+            git checkout $CIRCLE_BRANCH
+      - run:
+          name: Run travela backend lint test
+          command: yarn lint
+      - run:
+          name: Run travela test suites
+          command: |
+            ./cc-test-reporter before-build
+            yarn test --coverage
+            ./cc-test-reporter after-build --exit-code $?
+
+workflows:
+  version: 2
+  test_build_deploy:
+    jobs:
+      - checkout_code:
+          type: approval
+      - run_vulnerability_check:
+          requires:
+            - checkout_code
+      - test_and_report:
+          requires:
+            - checkout_code
+      - build_application_artifacts:
+          requires:
+            - run_vulnerability_check
+            - test_and_report
+            - checkout_code
