@@ -4,7 +4,7 @@
 version: 2
 defaults: &defaults
   docker:  
-    - image: gcr.io/journal-backend/journal-backend-base-node-image:0.1
+    - image: gcr.io/journal-apigit -backend/journal-backend-base-node-image:0.1
       auth:
         username: _json_key
         password: $GCLOUD_SERVICE_KEY
