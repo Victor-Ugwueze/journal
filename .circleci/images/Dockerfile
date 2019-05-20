@@ -15,6 +15,8 @@ RUN apk update && apk upgrade && \
         curl \
         python \
         py-crcmod \
+        make \
+        g++ \
         bash \
         libc6-compat \
         openssh-server \
@@ -37,3 +39,4 @@ RUN apk update && apk upgrade && \
     wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
         && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
         && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+  RUN yarn global add node-gyp

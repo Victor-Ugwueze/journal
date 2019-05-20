@@ -4,7 +4,7 @@
 version: 2
 defaults: &defaults
   docker:  
-    - image: gcr.io/my-comp-eng/journal-api:v1
+    - image: gcr.io/my-comp-eng/journal-api:v1.0
       auth:
         username: _json_key
         password: $GCLOUD_SERVICE_KEY
@@ -22,6 +22,15 @@ install_npm_packages: &install_npm_packages
     name: Install Npm Dependencies
     command: yarn install
 
+attach_workspace: &attach_workspace
+  attach_workspace:
+    at: ~/journal-backend
+
+persist_to_workspace: &persist_to_workspace
+  persist_to_workspace:
+    root: .
+    paths: .
+
 jobs:
   checkout_code:
     <<: *defaults
@@ -31,10 +40,22 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
+      - run: ls -l ~/journal-backend/node_modules
+
       - *install_npm_packages
+
+      - save_cache:
+        name: Save Yarn Package Cache
+        key: yarn-packages-{{ checksum "yarn.lock" }}
+        paths:
+          - ~/.cache/yarn
+          - node_modules
+      - *persist_to_workspace
+
   test_and_report:
     <<: *defaults
     steps:
+      - checkout
       - *install_npm_packages
       - run:
           name: Install code climate test reporter
@@ -47,6 +68,7 @@ jobs:
       - run:
           name: Checkout to staging and run migrations
           command: |
+            git checkout staging
             yarn db:migrate
       - run:
           name: Run journal test suites
