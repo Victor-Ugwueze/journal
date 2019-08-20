@@ -13,8 +13,8 @@ const defaultConfig = {
   database: process.env.DB_NAME,
   host: process.env.HOST,
   port: process.env.DB_PORT,
-  dialect: env.DATABASE_DIALECT || 'postgres',
-  use_env_variable: 'DATABASE_URL',
+  dialect: env.DATABASE_DIALECT
+  // use_env_variable: 'DATABASE_URL',
 };
 
 module.exports = {
