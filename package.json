@@ -4,7 +4,7 @@
   "description": "Journal is a web platform that allows a users to manage and organize their thought",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "npm run db:migrate && jest",
     "start:dev": "NODE_ENV=development  DEBUG=log  nodemon --exec babel-node src/index.js",
     "build": "yarn run clean && yarn run build-server",
     "build-server": "babel src --out-dir dist -s",
