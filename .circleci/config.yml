@@ -14,6 +14,7 @@ jobs:
            PGUSER: postgres
            NODE_ENV: production
            dialect: postgres
+           NOT_NAME: lol
            DATABASE_URL: "postgres://postgres:postgres@localhost:5432/population-m-s-test"
       
       - image: circleci/postgres:11
