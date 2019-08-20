@@ -4,7 +4,6 @@ const env = require('./environment.js');
 
 console.log(process.env.dialect, 'here...');
 console.log(process.env.NOT_NAME, 'sing.....');
-console.log(process.env.NODE_ENV, 'sing.....');
 
 
 const defaultConfig = {
