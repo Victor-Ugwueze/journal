@@ -12,7 +12,7 @@ jobs:
         environment:
            PGHOST: localhost
            PGUSER: postgres
-           NODE_ENV: test
+           NODE_ENV: production
            dialect: postgres
            DATABASE_URL: "postgres://postgres:postgres@localhost:5432/population-m-s-test"
       
