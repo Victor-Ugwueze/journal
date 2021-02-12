@@ -1,0 +1,43 @@
+input NewEntryInput {
+  title: String!
+  body: String!
+}
+
+input UpdateEntryInput {
+  id: ID!
+  title: String
+  body: String
+  mode: String!
+}
+
+type ERROR {
+  field: String!
+  message: String!
+}
+type Entry {
+  id: ID!
+  title: String!
+  body: String!
+  updatedAt: String!
+  createdAt: String!
+}
+type EntryData {
+  entry: Entry!
+  errors: [ERROR!]
+}
+
+type SuccessResponse {
+  errors: [ERROR!],
+  message: String!
+}
+
+extend type Mutation {
+  createEntry(input: NewEntryInput!): EntryData
+  updateEntry(input: UpdateEntryInput!): EntryData
+  deleteEntry(id: Int!): SuccessResponse
+  genEntryById(id: Int!): Entry
+}
+
+extend type Query {
+  listAllEntries: [Entry!]
+}

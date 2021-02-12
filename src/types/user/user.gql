@@ -1,0 +1,34 @@
+type User {
+  id: ID
+  firstName:  String
+  lastName:  String
+  email:  String
+  imageUrl:  String
+}
+
+type Query {
+    me: String!
+}
+
+type Error {
+  field: String!
+  message: String!
+}
+
+type AuthData {
+  token: String
+  user: User
+  errors: [Error!]
+}
+
+input NewUserInput {
+  firstName:  String!
+  lastName:  String!
+  email:  String!
+  password:  String!
+}
+
+type Mutation {
+  create(input: NewUserInput!): AuthData!
+  login(email: String!, password: String!): AuthData!
+}
