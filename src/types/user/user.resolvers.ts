@@ -1,5 +1,5 @@
 import { combineResolvers } from 'graphql-resolvers';
-import { User } from '../../models';
+import { User } from '../../models/types';
 import AuthHelper from '../../helper/Auth';
 import AuthMiddleWare from '../../middlewares';
 
@@ -41,7 +41,7 @@ const create = async (_, {
 };
 
 const login = async (_, { email, password }) => {
-  const user = await User.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email } }) as User;
   if (!user) {
     throw new Error('User not Found');
   }

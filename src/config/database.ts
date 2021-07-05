@@ -2,9 +2,6 @@ require('dotenv').config();
 
 const env = require('./environment.js');
 
-console.log(process.env.dialect, 'here...');
-console.log(process.env.NOT_NAME, 'sing.....');
-
 
 const defaultConfig = {
   databaseUrl: env.DATABASE_URL,

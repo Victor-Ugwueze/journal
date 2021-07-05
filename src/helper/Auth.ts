@@ -2,19 +2,23 @@ import bycrpt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 class AuthHelper {
-  static hashPassword(password) {
+  static hashPassword(password: string) {
     return bycrpt.hashSync(password, 10);
   }
 
-  static passwordMatch(password, hashPassword) {
+  static passwordMatch(password: string, hashPassword: string) {
     return bycrpt.compareSync(password, hashPassword);
   }
 
-  static generateToken(userId, email) {
+
+  static generateToken(userId: number, email: string) {
+    const secret: string = process.env.JWT_SECRET || '';
     return jwt.sign({
       userId,
       email,
-    }, process.env.JWT_SECRET, {
+    }, 
+    secret, 
+    {
       expiresIn: '48h',
     });
   }

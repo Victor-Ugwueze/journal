@@ -1,24 +1,32 @@
 import jwt from 'jsonwebtoken';
+import { Request } from 'express';
 import { skip } from 'graphql-resolvers';
 import { ForbiddenError } from 'apollo-server';
 import Joi from '@hapi/joi';
 import validationSchema from '../helper/validationSchemas';
 
 
+interface Context {
+  user : {
+    id: string,
+    email: string
+  }
+}
+
 class AuthMiddleware {
-  static async verifyToken(req) {
+  static async verifyToken(req: Request) {
     try {
       const token = req.headers.authorization;
       const decoded = await jwt.verify(token, process.env.JWT_SECRET);
       return {
-        user: { ...decoded },
+        user: { ...decoded as {} },
       };
     } catch (error) {
       return { error };
     }
   }
 
-  static isAuthenticated(parent, args, { user }) {
+  static isAuthenticated(_, _args: any, { user } : Context) {
     return user ? skip : new ForbiddenError('Not authenticated as user.');
   }
 
@@ -40,7 +48,7 @@ class AuthMiddleware {
 
   static async validateSignUp(_, { input }) {
     try {
-      await Joi.validate(
+      await Joi.valid(
         input,
         validationSchema.validateSignUp(),
         { abortEarly: false },
@@ -61,7 +69,7 @@ class AuthMiddleware {
 
   static async validateEntry(_, { input }) {
     try {
-      await Joi.validate(
+      await Joi.valid(
         input,
         input.mode === 'edit'
           ? validationSchema.validateUpdateEntry()

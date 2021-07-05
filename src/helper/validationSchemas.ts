@@ -1,6 +1,12 @@
 import Joi from '@hapi/joi';
 
-const schema = {
+type Schema = {
+  validateSignUp(): void,
+  validateCreateEntry(): void;
+  validateUpdateEntry(): void;
+}
+
+const schema: Schema = {
   validateSignUp: () => Joi.object().keys({
     firstName: Joi.string().alphanum().min(3).max(30)
       .required(),
@@ -8,15 +14,6 @@ const schema = {
       .required(),
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required()
-      .options({
-        language: {
-          string: {
-            regex: {
-              base: 'must have at least one lowercase, uppercase, a digit, and a special character',
-            },
-          },
-        },
-      }),
   }),
 
   validateCreateEntry: () => Joi.object().keys({

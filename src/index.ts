@@ -1,9 +1,9 @@
-import express from 'express';
+const express = require('express');
 import { ApolloServer } from 'apollo-server-express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
+const cors = require('cors');
+const bodyParser = require('body-parser');
 import { schemaObject, resolvers } from './types';
-import models from './models';
+import { sequelize } from './models';
 import AuthMiddleware from './middlewares';
 
 
@@ -21,7 +21,7 @@ app.get('/', (req, res) => res.status(200).json({ message: 'Welcome ' }));
     context: async ({ req }) => {
       const { user, error } = await AuthMiddleware.verifyToken(req);
       return {
-        models,
+        models: sequelize.models,
         user,
         error,
       };
