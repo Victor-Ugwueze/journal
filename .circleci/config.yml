@@ -67,5 +67,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
+      - run: npm run buld
       - run: npm test
       # - run: npm coverage
