@@ -10,7 +10,7 @@
     "rollback": "sequelize-cli db:migrate:undo",
     "build": "rimraf dist && tsc",
     "start": "tsc && node dist/index.js",
-    "db:migrate": "sequelize-cli db:migrate"
+    "db:migrate": "npx sequelize-cli db:migrate"
   },
   "repository": {
     "type": "git",
