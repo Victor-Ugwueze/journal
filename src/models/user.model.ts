@@ -8,39 +8,6 @@ import {
 
 import { Entry } from './entry.model'
 
-
-// export interface UserModel
-//     extends Model<UserAttributes>,
-//     UserAttributes {}
-
-// export type UserStatic = typeof Model & {
-//   new (values?: object, options?: BuildOptions): UserModel;
-// };
-
-// module.exports = (sequelize: Sequelize) => {
-//   const User = sequelize.define('User', {
-//     firstName: DataTypes.STRING,
-//     lastName: DataTypes.STRING,
-//     email: DataTypes.STRING,
-//     password: DataTypes.STRING,
-//     imageUrl: DataTypes.STRING,
-//   }, {});
-
-//   User.associate = (models) => {
-//     User.hasMany(models.Entry, {
-//       foreignKey: 'userId',
-//       as: 'entries',
-//     });
-//   };
-//   return User;
-// };
-
-
-
-
-
-
-
 @Table({
   tableName: 'users',
 })

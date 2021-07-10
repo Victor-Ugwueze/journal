@@ -7,11 +7,10 @@
     "test": "npm run db:migrate && jest",
     "dev": "cross-env NODE_ENV=development DEBUG=app:info,app:error concurrently \"tsc --watch\" \"nodemon -q dist/index.js\"",
     "predev": "npm run build && npm run migrate",
-    "migrate": "npx sequelize-cli db:migrate",
-    "rollback": "npx sequelize-cli db:migrate:undo",
+    "rollback": "sequelize-cli db:migrate:undo",
     "build": "rimraf dist && tsc",
     "start": "tsc && node dist/index.js",
-    "db:migrate": "sequelize db:migrate"
+    "db:migrate": "sequelize-cli db:migrate"
   },
   "repository": {
     "type": "git",
