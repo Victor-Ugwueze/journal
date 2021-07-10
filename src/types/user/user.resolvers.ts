@@ -1,3 +1,4 @@
+import {ModelCtor, Model} from 'sequelize'
 import { combineResolvers } from 'graphql-resolvers';
 import { User } from '../../models/types';
 import AuthHelper from '../../helper/Auth';
@@ -7,10 +8,10 @@ const create = async (_, {
   input: {
     email, password, firstName, lastName,
   },
-}) => {
-  let user;
+}, { models }: { models: {  [key: string]: ModelCtor<Model<any, any>> }}) => {
+  let user;  
   try {
-    user = await User.create({
+    user = await models.User.create({
       email,
       password: AuthHelper.hashPassword(password),
       firstName,
@@ -19,36 +20,48 @@ const create = async (_, {
     if (!user) {
       throw new Error('Problem Creating Your Account');
     }
-  } catch (error) {
+    const {
+      id,
+      imageUrl,
+    } = user;
+  
+    const token = AuthHelper.generateToken(id, email);
+    return {
+      user: {
+        id,
+        email,
+        imageUrl,
+        firstName,
+        lastName,
+      },
+      token,
+    };
+  } catch (error) {    
     throw new Error(error.toString());
   }
-  const {
-    id,
-    imageUrl,
-  } = user;
-
-  const token = AuthHelper.generateToken(id, email);
-  return {
-    user: {
-      id,
-      email,
-      imageUrl,
-      firstName,
-      lastName,
-    },
-    token,
-  };
 };
 
-const login = async (_, { email, password }) => {
-  const user = await User.findOne({ where: { email } }) as User;
+const login = async (_, { email, password }, { models }: { models: {  [key: string]: ModelCtor<Model<any, any>>}}) => {  
+ try {
+  
+  const user = await models.User.findOne({
+    where: { email }
+  }) as User;
+
   if (!user) {
-    throw new Error('User not Found');
+    return {
+      user: null,
+      token: null,
+      errors: [{
+        message: 'authentication failed'
+      }]
+    };
   }
 
   if (AuthHelper.passwordMatch(password, user.password)) {
     const {
       id,
+      email,
       imageUrl,
       firstName,
       lastName,
@@ -57,6 +70,7 @@ const login = async (_, { email, password }) => {
     return {
       user: {
         id,
+        email,
         imageUrl,
         firstName,
         lastName,
@@ -64,12 +78,24 @@ const login = async (_, { email, password }) => {
       token,
     };
   }
-  throw new Error('Unauthorized');
+  return {
+    user: null,
+    token: null,
+    errors: [{
+      message: 'authentication failed'
+    }]
+  }; } catch (error) {      
+  throw new Error('Server Error');
+ }
 };
 
 export default {
   Query: {
-    me: () => 'Hello',
+    me: async() => {
+      const user =  User.findAll();
+
+      return 'Hello yes';
+    }
   },
   Mutation: {
     create: combineResolvers(

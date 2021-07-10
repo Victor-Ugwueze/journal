@@ -4,8 +4,12 @@ node_modules
 # compiled directory
 dist
 
+# database data directory
+data
+
 # environment variables
 .env
+
 
 # vscode directory
 .vscode

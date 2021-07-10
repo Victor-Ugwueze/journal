@@ -4,6 +4,7 @@ import { skip } from 'graphql-resolvers';
 import { ForbiddenError } from 'apollo-server';
 import Joi from '@hapi/joi';
 import validationSchema from '../helper/validationSchemas';
+import { User } from '../models/types'
 
 
 interface Context {
@@ -30,20 +31,32 @@ class AuthMiddleware {
     return user ? skip : new ForbiddenError('Not authenticated as user.');
   }
 
-  static async userExist(_, { input: { email } }, { models: { User } }) {
-    const user = await User.findOne({ where: { email } });
+  static async userExist(_, { input: { email } }, { }) {
+    try {
+      const user = await User.findOne({ where: { email } }) as User;
     return !user
-      ? skip
-      : ({
-        user: null,
-        token: null,
-        errors: [
-          {
-            field: 'email',
-            message: 'User with this email already exists',
-          },
-        ],
-      });
+    ? skip
+    : ({
+      user: null,
+      token: null,
+      errors: [
+        {
+          field: 'email',
+          message: 'User with this email already exists',
+        },
+      ],
+    });
+   } catch (error) {     
+    const formatErrors = error.details.map(error => ({
+      field: error.context.key,
+      message: error.message,
+    }));
+    return {
+      user: null,
+      token: null,
+      errors: formatErrors,
+    };
+   }
   }
 
   static async validateSignUp(_, { input }) {

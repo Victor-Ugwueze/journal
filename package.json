@@ -6,7 +6,9 @@
   "scripts": {
     "test": "npm run db:migrate && jest",
     "dev": "cross-env NODE_ENV=development DEBUG=app:info,app:error concurrently \"tsc --watch\" \"nodemon -q dist/index.js\"",
-    "predev": "npm run build",
+    "predev": "npm run build && npm run migrate",
+    "migrate": "npx sequelize-cli db:migrate",
+    "rollback": "npx sequelize-cli db:migrate:undo",
     "build": "rimraf dist && tsc",
     "start": "tsc && node dist/index.js",
     "db:migrate": "sequelize db:migrate"
@@ -40,7 +42,7 @@
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
-    "pg": "^7.9.0",
+    "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "sequelize": "6.6.2",

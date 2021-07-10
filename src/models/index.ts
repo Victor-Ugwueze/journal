@@ -1,15 +1,23 @@
 import { Sequelize } from 'sequelize-typescript';
 
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/database.js')[env];
+type DataBaseConfig = {
+  host: string;
+  username: string;
+  password: string;
+  database: string;
+  dialect: 'postgres' | 'mysql'
+}
 
-let sequelize;
+const env = process.env.NODE_ENV || 'development';
+const config: DataBaseConfig = require('../config/database.js')[env];
+
+let sequelize: Sequelize;
 const modelPath = '/**/*.model.js';
 
 sequelize = new Sequelize({
   ...config,
   models: [__dirname + modelPath],
-  modelMatch: (filename, member) => {
+  modelMatch: (filename, member) => {        
     return (
       filename.substring(0, filename.indexOf('.model')).toLowerCase() ===
       member.toLowerCase()

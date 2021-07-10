@@ -4,13 +4,12 @@ const env = require('./environment.js');
 
 
 const defaultConfig = {
-  databaseUrl: env.DATABASE_URL,
-  username: process.env.USERNAME,
+  username: process.env.DB_USERNAME,
   database: process.env.DB_NAME,
-  host: process.env.HOST,
+  password:  process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
   port: process.env.DB_PORT,
-  dialect: env.DATABASE_DIALECT
-  // use_env_variable: 'DATABASE_URL',
+  dialect: env.DB_DIALECT
 };
 
 module.exports = {

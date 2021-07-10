@@ -1,9 +1,9 @@
 
 const generalOptionalEnvVariables = [
-  'DATABASE_DIALECT',
-  'DATABASE_HOST',
-  'DATABASE_PORT',
-  'DATABASE_PASSWORD',
+  'DB_DIALECT',
+  'DB_HOST',
+  'DB_PORT',
+  'DB_PASSWORD',
 ];
 
 const optionalEnvVariables = {

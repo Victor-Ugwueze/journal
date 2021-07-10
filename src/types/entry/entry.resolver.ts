@@ -26,7 +26,7 @@ const createEntry = async (_, { input }, { models, user, error }) => {
   };
 };
 
-const listAllEntries = async (_, { id }, { models, user: { userId } }) => {
+const listAllEntries = async (_,{ models, user: { userId } }) => {
   try {
     const entries = await models.Entry.findAll({
       where: {
@@ -100,7 +100,7 @@ export default {
   Query: {
     listAllEntries: combineResolvers(
       AuthMiddleWare.isAuthenticated,
-      // listAllEntries
+      listAllEntries
     ),
   },
   Mutation: {

@@ -43,8 +43,6 @@ import { Entry } from './entry.model'
 
 @Table({
   tableName: 'users',
-  createdAt: 'create_date',
-  updatedAt: false,
 })
 export class User extends Model {
   @PrimaryKey
