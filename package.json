@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run db:migrate && jest",
-    "dev": "cross-env NODE_ENV=development DEBUG=app:info,app:error concurrently \"tsc --watch\" \"nodemon -q dist/index.js\"",
-    "predev": "npm run build && npm run migrate",
+    "dev": "cross-env NODE_ENV=development DEBUG=app:info,app:error concurrently \"./node_modules/.bin/tsc --watch\" \"nodemon -q dist/index.js\"",
+    "predev": "npm run build && npm run db:migrate",
     "rollback": "sequelize-cli db:migrate:undo",
-    "build": "rimraf dist && tsc",
-    "start": "tsc && node dist/index.js",
+    "build": "rimraf dist && ./node_modules/.bin/tsc",
+    "start": "node dist/index.js",
     "db:migrate": "npx sequelize-cli db:migrate"
   },
   "repository": {
